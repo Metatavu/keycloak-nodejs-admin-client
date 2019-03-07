@@ -1,16 +1,19 @@
 import Resource from './resource';
 import ClientRepresentation from '../defs/clientRepresentation';
-import {KeycloakAdminClient} from '../client';
+import { KeycloakAdminClient } from '../client';
 import RoleRepresentation from '../defs/roleRepresentation';
 import UserRepresentation from '../defs/userRepresentation';
 import CredentialRepresentation from '../defs/credentialRepresentation';
+import ResourceRepresentation from '../defs/resourceRepresentation';
+import PolicyRepresentation from '../defs/policyRepresentation';
+import GroupPolicyRepresentation from '../defs/groupPolicyRepresentation';
 
 export interface ClientQuery {
   clientId?: string;
   viewableOnly?: boolean;
 }
 
-export class Clients extends Resource<{realm?: string}> {
+export class Clients extends Resource<{ realm?: string }> {
   public find = this.makeRequest<ClientQuery, ClientRepresentation[]>({
     method: 'GET',
   });
@@ -126,6 +129,74 @@ export class Clients extends Resource<{realm?: string}> {
   >({
     method: 'GET',
     path: '/{id}/client-secret',
+    urlParamKeys: ['id'],
+  });
+
+  public createAuthzResource = this.makeRequest<{ id: string, resource: ResourceRepresentation }, void>({
+    method: 'POST',
+    path: '/{id}/authz/resource-server/resource',
+    urlParamKeys: ['id'],
+    payloadKey: 'resource',
+  });
+
+  public listAuthzResources = this.makeRequest<{
+    id: string,
+    deep?: boolean,
+    first?: number,
+    max?: number,
+    uri?: string,
+  }, ResourceRepresentation[]>({
+    method: 'GET',
+    path: '/{id}/authz/resource-server/resource',
+    urlParamKeys: ['id'],
+  });
+
+  public createAuthzGroupPolicy = this.makeRequest<{ id: string, policy: GroupPolicyRepresentation }, void>({
+    method: 'POST',
+    path: '/{id}/authz/resource-server/policy/group',
+    urlParamKeys: ['id'],
+    payloadKey: 'policy',
+  });
+
+  public listAuthzPolicies = this.makeRequest<{
+    id: string,
+    first?: number,
+    max?: number,
+    name?: string,
+    permission?: boolean,
+  }, PolicyRepresentation[]>({
+    method: 'GET',
+    path: '/{id}/authz/resource-server/policy',
+    urlParamKeys: ['id'],
+  });
+
+  public listAuthzGroupPolicies = this.makeRequest<{
+    id: string,
+    first?: number,
+    max?: number,
+    name?: string,
+    permission?: boolean,
+  }, GroupPolicyRepresentation[]>({
+    method: 'GET',
+    path: '/{id}/authz/resource-server/policy/group',
+    urlParamKeys: ['id'],
+  });
+
+  public createAuthzScopePermission = this.makeRequest<{ id: string, permission: PolicyRepresentation }, void>({
+    method: 'POST',
+    path: '/{id}/authz/resource-server/permission/scope',
+    urlParamKeys: ['id'],
+    payloadKey: 'permission',
+  });
+
+  public listAuthzPermissions = this.makeRequest<{
+    id: string,
+    first?: number,
+    max?: number,
+    name?: string
+  }, PolicyRepresentation[]>({
+    method: 'GET',
+    path: '/{id}/authz/resource-server/permission',
     urlParamKeys: ['id'],
   });
 
