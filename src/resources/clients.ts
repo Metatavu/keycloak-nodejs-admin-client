@@ -132,7 +132,7 @@ export class Clients extends Resource<{ realm?: string }> {
     urlParamKeys: ['id'],
   });
 
-  public createAuthzResource = this.makeRequest<{ id: string, resource: ResourceRepresentation }, void>({
+  public createAuthzResource = this.makeRequest<{ id: string, resource: ResourceRepresentation }, ResourceRepresentation>({
     method: 'POST',
     path: '/{id}/authz/resource-server/resource',
     urlParamKeys: ['id'],
