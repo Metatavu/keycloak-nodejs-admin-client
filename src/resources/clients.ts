@@ -7,6 +7,7 @@ import CredentialRepresentation from '../defs/credentialRepresentation';
 import ResourceRepresentation from '../defs/resourceRepresentation';
 import PolicyRepresentation from '../defs/policyRepresentation';
 import GroupPolicyRepresentation from '../defs/groupPolicyRepresentation';
+import UserPolicyRepresentation from '../defs/userPolicyRepresentation';
 
 export interface ClientQuery {
   clientId?: string;
@@ -132,7 +133,10 @@ export class Clients extends Resource<{ realm?: string }> {
     urlParamKeys: ['id'],
   });
 
-  public createAuthzResource = this.makeRequest<{ id: string, resource: ResourceRepresentation }, ResourceRepresentation>({
+  public createAuthzResource = this.makeRequest<{
+    id: string,
+    resource: ResourceRepresentation,
+  }, ResourceRepresentation>({
     method: 'POST',
     path: '/{id}/authz/resource-server/resource',
     urlParamKeys: ['id'],
@@ -151,9 +155,22 @@ export class Clients extends Resource<{ realm?: string }> {
     urlParamKeys: ['id'],
   });
 
-  public createAuthzGroupPolicy = this.makeRequest<{ id: string, policy: GroupPolicyRepresentation }, void>({
+  public createAuthzGroupPolicy = this.makeRequest<{
+    id: string,
+    policy: GroupPolicyRepresentation,
+  }, GroupPolicyRepresentation>({
     method: 'POST',
     path: '/{id}/authz/resource-server/policy/group',
+    urlParamKeys: ['id'],
+    payloadKey: 'policy',
+  });
+
+  public createAuthzUserPolicy = this.makeRequest<{
+    id: string,
+    policy: UserPolicyRepresentation,
+  }, UserPolicyRepresentation>({
+    method: 'POST',
+    path: '/{id}/authz/resource-server/policy/user',
     urlParamKeys: ['id'],
     payloadKey: 'policy',
   });
@@ -182,7 +199,22 @@ export class Clients extends Resource<{ realm?: string }> {
     urlParamKeys: ['id'],
   });
 
-  public createAuthzScopePermission = this.makeRequest<{ id: string, permission: PolicyRepresentation }, void>({
+  public listAuthzUserPolicies = this.makeRequest<{
+    id: string,
+    first?: number,
+    max?: number,
+    name?: string,
+    permission?: boolean,
+  }, UserPolicyRepresentation[]>({
+    method: 'GET',
+    path: '/{id}/authz/resource-server/policy/user',
+    urlParamKeys: ['id'],
+  });
+
+  public createAuthzScopePermission = this.makeRequest<{
+    id: string,
+    permission: PolicyRepresentation,
+  }, void>({
     method: 'POST',
     path: '/{id}/authz/resource-server/permission/scope',
     urlParamKeys: ['id'],
@@ -193,11 +225,20 @@ export class Clients extends Resource<{ realm?: string }> {
     id: string,
     first?: number,
     max?: number,
-    name?: string
+    name?: string,
   }, PolicyRepresentation[]>({
     method: 'GET',
     path: '/{id}/authz/resource-server/permission',
     urlParamKeys: ['id'],
+  });
+
+  public deleteAuthzPermission = this.makeRequest<{
+    id: string,
+    permissionId: string,
+  }, void>({
+    method: 'DELETE',
+    path: '/{id}/authz/resource-server/permission/{permissionId}',
+    urlParamKeys: ['id', 'permissionId'],
   });
 
   constructor(client: KeycloakAdminClient) {
