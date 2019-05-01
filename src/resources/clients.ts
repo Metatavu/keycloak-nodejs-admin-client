@@ -21,16 +21,16 @@ export class Clients extends Resource<{ realm?: string }> {
     method: 'GET',
   });
 
-  public create = this.makeRequest<ClientRepresentation, {id: string}>({
+  public create = this.makeRequest<ClientRepresentation, { id: string }>({
     method: 'POST',
-    returnResourceIdInLocationHeader: {field: 'id'},
+    returnResourceIdInLocationHeader: { field: 'id' },
   });
 
   /**
    * Single client
    */
 
-  public findOne = this.makeRequest<{id: string}, ClientRepresentation>({
+  public findOne = this.makeRequest<{ id: string }, ClientRepresentation>({
     method: 'GET',
     path: '/{id}',
     urlParamKeys: ['id'],
@@ -38,7 +38,7 @@ export class Clients extends Resource<{ realm?: string }> {
   });
 
   public update = this.makeUpdateRequest<
-    {id: string},
+    { id: string },
     ClientRepresentation,
     void
   >({
@@ -47,7 +47,7 @@ export class Clients extends Resource<{ realm?: string }> {
     urlParamKeys: ['id'],
   });
 
-  public del = this.makeRequest<{id: string}, void>({
+  public del = this.makeRequest<{ id: string }, void>({
     method: 'DELETE',
     path: '/{id}',
     urlParamKeys: ['id'],
@@ -57,21 +57,21 @@ export class Clients extends Resource<{ realm?: string }> {
    * Client roles
    */
 
-  public createRole = this.makeRequest<RoleRepresentation, {roleName: string}>({
+  public createRole = this.makeRequest<RoleRepresentation, { roleName: string }>({
     method: 'POST',
     path: '/{id}/roles',
     urlParamKeys: ['id'],
-    returnResourceIdInLocationHeader: {field: 'roleName'},
+    returnResourceIdInLocationHeader: { field: 'roleName' },
   });
 
-  public listRoles = this.makeRequest<{id: string}, RoleRepresentation[]>({
+  public listRoles = this.makeRequest<{ id: string }, RoleRepresentation[]>({
     method: 'GET',
     path: '/{id}/roles',
     urlParamKeys: ['id'],
   });
 
   public findRole = this.makeRequest<
-    {id: string; roleName: string},
+    { id: string; roleName: string },
     RoleRepresentation
   >({
     method: 'GET',
@@ -81,7 +81,7 @@ export class Clients extends Resource<{ realm?: string }> {
   });
 
   public updateRole = this.makeUpdateRequest<
-    {id: string; roleName: string},
+    { id: string; roleName: string },
     RoleRepresentation,
     void
   >({
@@ -90,14 +90,14 @@ export class Clients extends Resource<{ realm?: string }> {
     urlParamKeys: ['id', 'roleName'],
   });
 
-  public delRole = this.makeRequest<{id: string; roleName: string}, void>({
+  public delRole = this.makeRequest<{ id: string; roleName: string }, void>({
     method: 'DELETE',
     path: '/{id}/roles/{roleName}',
     urlParamKeys: ['id', 'roleName'],
   });
 
   public findUsersWithRole = this.makeRequest<
-    {id: string; roleName: string; first?: number; max?: number},
+    { id: string; roleName: string; first?: number; max?: number },
     UserRepresentation[]
   >({
     method: 'GET',
@@ -110,7 +110,7 @@ export class Clients extends Resource<{ realm?: string }> {
    */
 
   public getServiceAccountUser = this.makeRequest<
-    {id: string},
+    { id: string },
     UserRepresentation
   >({
     method: 'GET',
@@ -122,7 +122,7 @@ export class Clients extends Resource<{ realm?: string }> {
    * Client secret
    */
 
-  public generateNewClientSecret = this.makeRequest<{id: string}, {id: string}>(
+  public generateNewClientSecret = this.makeRequest<{ id: string }, { id: string }>(
     {
       method: 'POST',
       path: '/{id}/client-secret',
@@ -131,7 +131,7 @@ export class Clients extends Resource<{ realm?: string }> {
   );
 
   public getClientSecret = this.makeRequest<
-    {id: string},
+    { id: string },
     CredentialRepresentation
   >({
     method: 'GET',
@@ -170,7 +170,6 @@ export class Clients extends Resource<{ realm?: string }> {
     urlParamKeys: ['id'],
     payloadKey: 'policy',
   });
-
 
   public createAuthzRolePolicy = this.makeRequest<{
     id: string,
@@ -283,7 +282,7 @@ export class Clients extends Resource<{ realm?: string }> {
 
   public listAuthzPermissionAssociatedPolicies = this.makeRequest<{
     id: string,
-    permissionId: string
+    permissionId: string,
   }, PolicyRepresentation[]>({
     method: 'GET',
     path: '/{id}/authz/resource-server/policy/{permissionId}/associatedPolicies',
