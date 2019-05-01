@@ -31,16 +31,16 @@ describe('Users', function() {
     await this.kcAdminClient.auth(credentials);
     // initialize user
     const username = faker.internet.userName();
-    await this.kcAdminClient.users.create({
+    const user = await this.kcAdminClient.users.create({
       username,
       email: 'wwwy3y3@canner.io',
       // enabled required to be true in order to send actions email
       emailVerified: true,
       enabled: true,
     });
-    const users = await this.kcAdminClient.users.find({username});
-    expect(users[0]).to.be.ok;
-    this.currentUser = users[0];
+
+    expect(user.id).to.be.ok;
+    this.currentUser = await this.kcAdminClient.users.findOne({id: user.id});
 
     // add smtp to realm
     await this.kcAdminClient.realms.update(
@@ -226,6 +226,16 @@ describe('Users', function() {
       });
       // currentRole will have an empty `attributes`, but role-mappings do not
       expect(roles).to.deep.include(omit(this.currentRole, 'attributes'));
+    });
+
+    it('list realm composite role-mappings of user', async () => {
+      const roles = await this.kcAdminClient.users.listCompositeRealmRoleMappings(
+        {
+          id: this.currentUser.id,
+        },
+      );
+      // todo: add data integrity check later
+      expect(roles).to.be.ok;
     });
 
     it('del realm role-mappings from user', async () => {

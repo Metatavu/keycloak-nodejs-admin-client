@@ -4,7 +4,7 @@ import {KeycloakAdminClient} from '../client';
 import UserRepresentation from '../defs/userRepresentation';
 import MappingsRepresentation from '../defs/mappingsRepresentation';
 import RoleRepresentation, {
-  RoleMappingPayload
+  RoleMappingPayload,
 } from '../defs/roleRepresentation';
 
 export interface GroupQuery {
@@ -18,8 +18,9 @@ export class Groups extends Resource<{realm?: string}> {
     method: 'GET',
   });
 
-  public create = this.makeRequest<GroupRepresentation, void>({
+  public create = this.makeRequest<GroupRepresentation, {id: string}>({
     method: 'POST',
+    returnResourceIdInLocationHeader: {field: 'id'},
   });
 
   /**
@@ -47,6 +48,22 @@ export class Groups extends Resource<{realm?: string}> {
     method: 'DELETE',
     path: '/{id}',
     urlParamKeys: ['id'],
+  });
+
+  /**
+   * Set or create child.
+   * This will just set the parent if it exists. Create it and set the parent if the group doesn’t exist.
+   */
+
+  public setOrCreateChild = this.makeUpdateRequest<
+    {id: string},
+    GroupRepresentation,
+    {id: string}
+  >({
+    method: 'POST',
+    path: '/{id}/children',
+    urlParamKeys: ['id'],
+    returnResourceIdInLocationHeader: {field: 'id'},
   });
 
   /**
