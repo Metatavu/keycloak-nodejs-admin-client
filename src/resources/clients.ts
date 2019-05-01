@@ -8,6 +8,8 @@ import ResourceRepresentation from '../defs/resourceRepresentation';
 import PolicyRepresentation from '../defs/policyRepresentation';
 import GroupPolicyRepresentation from '../defs/groupPolicyRepresentation';
 import UserPolicyRepresentation from '../defs/userPolicyRepresentation';
+import ScopeRepresentation from '../defs/scopeRepresentation';
+import RolePolicyRepresentation from '../defs/rolePolicyRepresentation';
 
 export interface ClientQuery {
   clientId?: string;
@@ -165,6 +167,17 @@ export class Clients extends Resource<{ realm?: string }> {
     payloadKey: 'policy',
   });
 
+
+  public createAuthzRolePolicy = this.makeRequest<{
+    id: string,
+    policy: RolePolicyRepresentation,
+  }, RolePolicyRepresentation>({
+    method: 'POST',
+    path: '/{id}/authz/resource-server/policy/role',
+    urlParamKeys: ['id'],
+    payloadKey: 'policy',
+  });
+
   public createAuthzUserPolicy = this.makeRequest<{
     id: string,
     policy: UserPolicyRepresentation,
@@ -173,6 +186,15 @@ export class Clients extends Resource<{ realm?: string }> {
     path: '/{id}/authz/resource-server/policy/user',
     urlParamKeys: ['id'],
     payloadKey: 'policy',
+  });
+
+  public listAuthzPermissionScopes = this.makeRequest<{
+    id: string,
+    policyId: string,
+  }, ScopeRepresentation[]>({
+    method: 'GET',
+    path: '/{id}/authz/resource-server/policy/{policyId}/scopes',
+    urlParamKeys: ['id', 'policyId'],
   });
 
   public listAuthzPolicies = this.makeRequest<{
@@ -184,6 +206,18 @@ export class Clients extends Resource<{ realm?: string }> {
   }, PolicyRepresentation[]>({
     method: 'GET',
     path: '/{id}/authz/resource-server/policy',
+    urlParamKeys: ['id'],
+  });
+
+  public listAuthzRolePolicies = this.makeRequest<{
+    id: string,
+    first?: number,
+    max?: number,
+    name?: string,
+    permission?: boolean,
+  }, RolePolicyRepresentation[]>({
+    method: 'GET',
+    path: '/{id}/authz/resource-server/policy/role',
     urlParamKeys: ['id'],
   });
 
@@ -221,6 +255,17 @@ export class Clients extends Resource<{ realm?: string }> {
     payloadKey: 'permission',
   });
 
+  public updateAuthzScopePermission = this.makeRequest<{
+    id: string,
+    permission: PolicyRepresentation,
+    permissionId: string,
+  }, void>({
+    method: 'PUT',
+    path: '/{id}/authz/resource-server/permission/scope/{permissionId}',
+    urlParamKeys: ['id', 'permissionId'],
+    payloadKey: 'permission',
+  });
+
   public listAuthzPermissions = this.makeRequest<{
     id: string,
     first?: number,
@@ -230,6 +275,15 @@ export class Clients extends Resource<{ realm?: string }> {
     method: 'GET',
     path: '/{id}/authz/resource-server/permission',
     urlParamKeys: ['id'],
+  });
+
+  public listAuthzPermissionAssociatedPolicies = this.makeRequest<{
+    id: string,
+    permissionId: string
+  }, PolicyRepresentation[]>({
+    method: 'GET',
+    path: '/{id}/authz/resource-server/policy/{permissionId}/associatedPolicies',
+    urlParamKeys: ['id', 'permissionId'],
   });
 
   public deleteAuthzPermission = this.makeRequest<{
